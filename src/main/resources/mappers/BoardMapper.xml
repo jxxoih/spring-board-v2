@@ -22,4 +22,37 @@
         ORDER BY `board_id` DESC
             LIMIT #{limit} OFFSET #{offset}
     </select>
+
+    <select id="selectArticle" resultType="com.learning.board_0326.dtos.ArticleDto">
+        SELECT *
+        FROM `board`
+        WHERE `board_id` = #{aid} AND `use_state` > 0
+    </select>
+
+    <insert id="insertArticle">
+        INSERT INTO `board` (`board_writer`, `board_title`, `board_content`, `board_password`)
+        VALUES (#{board_writer}, #{board_title}, #{board_content}, #{board_password})
+    </insert>
+
+    <select id="selectBoardWriter" resultType="String">
+        SELECT `board_writer` FROM `board` WHERE `board_id` = #{aid}
+    </select>
+
+    <update id="updateArticle">
+        UPDATE `board`
+        SET `board_title` = #{board_title}, `board_content` = #{board_content}, `updated_at` = NOW()
+        WHERE `board_id` = #{aid} AND `board_writer` = #{board_writer}
+    </update>
+
+    <update id="deleteArticle">
+        UPDATE `board`
+        SET `use_state` = 0, `updated_at` = NOW()
+        WHERE `board_id` = #{aid} AND `board_writer` = #{board_writer}
+    </update>
+
+    <insert id="insertDeleteLog">
+        INSERT INTO `board_log` (`b_id`, `use_state`)
+        VALUES (#{aid}, 0)
+    </insert>
+
 </mapper>

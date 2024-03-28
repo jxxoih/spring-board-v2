@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html" pageEncoding="UTF-8" trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!doctype html>
 <html lang="ko">
 <head>
@@ -23,10 +25,67 @@
 </head>
 <body>
 
-로그인 완료 리스트.
 <a href="javascript:kakaoLogout()">
     로그아웃
 </a>
+<a href="/board/write">
+    글작성
+</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>제목</th>
+        <th>내용</th>
+        <th>작성자</th>
+        <th>작성일시</th>
+        <th>조회수</th>
+    </tr>
+    </thead>
+    <tbody>
+        <c:forEach var="article" items="${vo.articles}">
+            <tr onclick="window.location.href='/board/read/${article.board_id}?p=${vo.page}'">
+                <td>${article.board_title}</td>
+                <td>${article.board_content}</td>
+                <td>${article.board_writer}</td>
+                <td>${article.formattedTimestamp}</td>
+                <td>${article.view_count}</td>
+            </tr>
+        </c:forEach>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="5">
+            <c:if test="${vo.maxPage > 1 && vo.page != 1}">
+                <span>
+                    <a href="/board/list/1">&lt;&lt;</a>
+                </span>
+            </c:if>
+            <c:forEach var="i" begin="${vo.leftPage}" end="${vo.rightPage}" step="1">
+                <c:if test="${i == vo.page}">
+                    <span>
+                        <strong>
+                            <a>${i}</a>
+                        </strong>
+                    </span>
+                </c:if>
+                <c:if test="${i != vo.page}">
+                    <span>
+                        <a href="/board/list/${i}">${i}</a>
+                    </span>
+                </c:if>
+            </c:forEach>
+            <c:if test="${vo.maxPage > 1 && vo.page != vo.maxPage}">
+                <span>
+                    <a href="/board/list/${vo.maxPage}">&gt;&gt;</a>
+                </span>
+            </c:if>
+        </td>
+
+    </tr>
+
+    </tfoot>
+</table>
 
 
 </body>
